@@ -4,7 +4,7 @@ jobs:
       - mkdir build && cd build && pwd && ls .. && cmake --version && cmake -GNinja .. && ninja
   - name: Minimal testing
     env:
-      CC: gcc
+      PYTEST_ARGS: tests/test_code_conventions.py tests/test_kat.py
     cmds:
-      - python3 -m pytest --verbose tests/test_code_conventions.py tests/test_kat.py
+      - python3 -m pytest --verbose $PYTEST_ARGS
 
