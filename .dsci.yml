@@ -1,7 +1,14 @@
 jobs:
+  - name: Check environment
+    cmds:
+      - whoami
+      - pwd
+      - cmake --version
+      - uname -a
+      - gcc --version
   - name: Building
     cmds:
-      - mkdir build && cd build && pwd && ls .. && cmake --version && cmake -GNinja .. && ninja
+      - mkdir build && cd build && cmake -GNinja .. && ninja
   - name: Minimal testing
     env:
       PYTEST_ARGS: tests/test_code_conventions.py tests/test_kat.py
