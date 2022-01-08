@@ -5,7 +5,6 @@ jobs:
       - pwd
       - cmake --version
       - uname -a
-      - gcc --version
   - name: Building
     cmds:
       - mkdir build && cd build && cmake -GNinja .. && ninja
