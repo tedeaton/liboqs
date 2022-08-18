@@ -631,6 +631,14 @@ OQS_API OQS_STATUS OQS_KEM_keypair(const OQS_KEM *kem, uint8_t *public_key, uint
 	}
 }
 
+OQS_API OQS_STATUS OQS_KEM_derive_keypair(const OQS_KEM *kem, const uint8_t *seed, uint8_t *public_key, uint8_t *secret_key) {
+	if (0 != strcasecmp(kem->method_name, OQS_KEM_alg_kyber_512)) {
+		return OQS_ERROR;
+	} else {
+		return kem->derive_keypair(seed, public_key, secret_key);
+	}
+}
+
 OQS_API OQS_STATUS OQS_KEM_encaps(const OQS_KEM *kem, uint8_t *ciphertext, uint8_t *shared_secret, const uint8_t *public_key) {
 	if (kem == NULL) {
 		return OQS_ERROR;

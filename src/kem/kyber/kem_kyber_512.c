@@ -24,6 +24,7 @@ OQS_KEM *OQS_KEM_kyber_512_new() {
 	kem->length_shared_secret = OQS_KEM_kyber_512_length_shared_secret;
 
 	kem->keypair = OQS_KEM_kyber_512_keypair;
+	kem->derive_keypair = OQS_KEM_kyber_512_derive_keypair;
 	kem->encaps = OQS_KEM_kyber_512_encaps;
 	kem->decaps = OQS_KEM_kyber_512_decaps;
 
@@ -31,6 +32,7 @@ OQS_KEM *OQS_KEM_kyber_512_new() {
 }
 
 extern int pqcrystals_kyber512_ref_keypair(uint8_t *pk, uint8_t *sk);
+extern int pqcrystals_kyber512_ref_derive_keypair(const uint8_t *seed, uint8_t *pk, uint8_t *sk);
 extern int pqcrystals_kyber512_ref_enc(uint8_t *ct, uint8_t *ss, const uint8_t *pk);
 extern int pqcrystals_kyber512_ref_dec(uint8_t *ss, const uint8_t *ct, const uint8_t *sk);
 
@@ -70,6 +72,10 @@ OQS_API OQS_STATUS OQS_KEM_kyber_512_keypair(uint8_t *public_key, uint8_t *secre
 #else
 	return (OQS_STATUS) pqcrystals_kyber512_ref_keypair(public_key, secret_key);
 #endif
+}
+
+OQS_API OQS_STATUS OQS_KEM_kyber_512_derive_keypair(const uint8_t *seed, uint8_t *public_key, uint8_t *secret_key) {
+	return (OQS_STATUS) pqcrystals_kyber512_ref_derive_keypair(seed, public_key, secret_key);
 }
 
 OQS_API OQS_STATUS OQS_KEM_kyber_512_encaps(uint8_t *ciphertext, uint8_t *shared_secret, const uint8_t *public_key) {

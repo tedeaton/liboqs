@@ -1,5 +1,6 @@
 #include <stddef.h>
 #include <stdint.h>
+#include <string.h>
 #include "params.h"
 #include "kem.h"
 #include "indcpa.h"
@@ -30,6 +31,35 @@ int crypto_kem_keypair(uint8_t *pk,
   hash_h(sk+KYBER_SECRETKEYBYTES-2*KYBER_SYMBYTES, pk, KYBER_PUBLICKEYBYTES);
   /* Value z for pseudo-random output on reject */
   randombytes(sk+KYBER_SECRETKEYBYTES-KYBER_SYMBYTES, KYBER_SYMBYTES);
+  return 0;
+}
+
+/*************************************************
+* Name:        crypto_kem_derive_keypair
+*
+* Description: Generates public and private key
+*              for CCA-secure Kyber key encapsulation mechanism
+*              from a provided seed
+*
+* Arguments:   - uint8_t *seed: pointer to input array of 2*KYBER_SYMBYTES bytes
+*              - uint8_t *pk: pointer to output public key
+*                (an already allocated array of KYBER_PUBLICKEYBYTES bytes)
+*              - uint8_t *sk: pointer to output private key
+*                (an already allocated array of KYBER_SECRETKEYBYTES bytes)
+*
+* Returns 0 (success)
+**************************************************/
+int crypto_kem_derive_keypair(const uint8_t *seed,
+                                     uint8_t *pk,
+                                     uint8_t *sk)
+{
+  size_t i;
+  deterministic_indcpa_keypair(seed, pk, sk);
+  for(i=0;i<KYBER_INDCPA_PUBLICKEYBYTES;i++)
+    sk[i+KYBER_INDCPA_SECRETKEYBYTES] = pk[i];
+  hash_h(sk+KYBER_SECRETKEYBYTES-2*KYBER_SYMBYTES, pk, KYBER_PUBLICKEYBYTES);
+  /* Value z for pseudo-random output on reject */
+  memcpy(sk+KYBER_SECRETKEYBYTES-KYBER_SYMBYTES, seed+KYBER_SYMBYTES, KYBER_SYMBYTES);
   return 0;
 }
 

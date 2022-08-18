@@ -77,6 +77,9 @@ endif()
 add_executable(test_kem_mem test_kem_mem.c)
 target_link_libraries(test_kem_mem PRIVATE ${API_TEST_DEPS})
 
+add_executable(test_key_derive test_key_derive.c)
+target_link_libraries(test_key_derive PRIVATE ${API_TEST_DEPS})
+
 add_executable(speed_kem speed_kem.c)
 target_link_libraries(speed_kem PRIVATE ${API_TEST_DEPS})
 

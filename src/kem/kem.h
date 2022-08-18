@@ -200,6 +200,23 @@ typedef struct OQS_KEM {
 	 */
 	OQS_STATUS (*keypair)(uint8_t *public_key, uint8_t *secret_key);
 
+    /**
+     * Deterministic keypair generation algorithm.
+     * 
+     * Caller MUST ensure that seed consists of 64 bytes of high entropy seed material
+     * that is cryptographically suitable to derive a secret key from.
+     * Caller is responsible for allocating sufficient memory for `public_key` and
+     * `secret_key`, based on the `length_*` members in this object or the per-scheme
+     * compile-time macros `OQS_KEM_*_length_*`.
+     * 
+     * @param[in] seed The seed for the keypair.
+     * @param[out] public_key The public key represented as a byte string.
+     * @param[out] secret_key The secret key represented as a byte string.
+     * @return OQS_SUCCESS or OQS_ERROR
+     * 
+     */
+    OQS_STATUS (*derive_keypair)(const uint8_t *seed, uint8_t *public_key, uint8_t *secret_key);
+
 	/**
 	 * Encapsulation algorithm.
 	 *
@@ -254,6 +271,22 @@ OQS_API OQS_KEM *OQS_KEM_new(const char *method_name);
  * @return OQS_SUCCESS or OQS_ERROR
  */
 OQS_API OQS_STATUS OQS_KEM_keypair(const OQS_KEM *kem, uint8_t *public_key, uint8_t *secret_key);
+
+/**
+ * Keypair generation algorithm.
+ *
+ * Caller is responsible for ensuring seed consists of 64 bytes of high entropy key material.
+ * Caller is responsible for allocating sufficient memory for `public_key` and
+ * `secret_key`, based on the `length_*` members in this object or the per-scheme
+ * compile-time macros `OQS_KEM_*_length_*`.
+ *
+ * @param[in] kem The OQS_KEM object representing the KEM.
+ * @param[in] seed The initial key material from which the keys will be derived
+ * @param[out] public_key The public key represented as a byte string.
+ * @param[out] secret_key The secret key represented as a byte string.
+ * @return OQS_SUCCESS or OQS_ERROR
+ */
+OQS_API OQS_STATUS OQS_KEM_derive_keypair(const OQS_KEM *kem, const uint8_t *seed, uint8_t *public_key, uint8_t *secret_key);
 
 /**
  * Encapsulation algorithm.
